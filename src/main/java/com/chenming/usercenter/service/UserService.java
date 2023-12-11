@@ -41,4 +41,6 @@ public interface UserService extends IService<User> {
      * @return
      */
     User getSafetyUser(User orignUser);
+
+    int userLogout(HttpServletRequest request);
 }
