@@ -2,6 +2,9 @@ package com.chenming.usercenter.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.chenming.usercenter.common.ErrorCode;
+import com.chenming.usercenter.common.ResultUtils;
+import com.chenming.usercenter.exception.BusinessException;
 import com.chenming.usercenter.model.domain.User;
 import com.chenming.usercenter.service.UserService;
 import com.chenming.usercenter.mapper.UserMapper;
@@ -41,16 +44,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     public long userRegister(String userAccount, String userPassword, String checkPassword, String planetCode) {
         //1.校验
         if (StringUtils.isAnyBlank(userAccount, userPassword, checkPassword, planetCode)) {
-            return -1;
+            throw new BusinessException(ErrorCode.PARAM_ERROR, "参数为空");
         }
         if (userAccount.length() < 4) {
-            return -1;
+            throw new BusinessException(ErrorCode.PARAM_ERROR, "用户账号过短");
         }
         if (userPassword.length() < 8 || checkPassword.length() < 8) {
-            return -1;
+            throw new BusinessException(ErrorCode.PARAM_ERROR, "用户密码过短");
         }
         if(planetCode.length() > 5){
-            return -1;
+            throw new BusinessException(ErrorCode.PARAM_ERROR, "星球编号过长");
         }
 
 
