@@ -102,7 +102,7 @@ public class UserController {
         Object userObj = request.getSession().getAttribute(USER_LOGIN_STATE);
         User currentUser = (User) userObj;
         if(currentUser == null)
-            return null;
+            throw new BusinessException(ErrorCode.NOT_LOGIN);
         long userId = currentUser.getId();
         //从数据库中搜
         User user = userService.getById(userId);
@@ -113,10 +113,10 @@ public class UserController {
     @GetMapping("/delete")
     public BaseResponse<Boolean> deleteUser(@RequestBody long id, HttpServletRequest request){
         if (!isAdmin(request)){
-            return null;
+            throw new BusinessException(ErrorCode.NO_AUTH);
         }
         if (id <= 0){
-            return null;
+            throw new BusinessException(ErrorCode.PARAM_ERROR);
         }
         boolean b = userService.removeById(id);
         return ResultUtils.success(b);

@@ -39,7 +39,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     private final String SALT = "chenming";
 
 
-
     @Override
     public long userRegister(String userAccount, String userPassword, String checkPassword, String planetCode) {
         //1.校验
@@ -52,7 +51,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         if (userPassword.length() < 8 || checkPassword.length() < 8) {
             throw new BusinessException(ErrorCode.PARAM_ERROR, "用户密码过短");
         }
-        if(planetCode.length() > 5){
+        if (planetCode.length() > 5) {
             throw new BusinessException(ErrorCode.PARAM_ERROR, "星球编号过长");
         }
 
@@ -74,7 +73,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         queryWrapper.eq("userAccount", userAccount);
         long count = userMapper.selectCount(queryWrapper);
         if (count > 0) {
-            return -1;
+            throw new BusinessException(ErrorCode.PARAM_ERROR, "用户账号重复");
         }
 
         //星期编号不能重复
@@ -82,7 +81,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         queryWrapper.eq("planetCode", planetCode);
         count = userMapper.selectCount(queryWrapper);
         if (count > 0) {
-            return -1;
+            throw new BusinessException(ErrorCode.PARAM_ERROR, "星球编号重复");
         }
 
         //2 加密
@@ -147,12 +146,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
     /**
      * 用户脱敏
+     *
      * @param orignUser
      * @return
      */
     @Override
-    public User getSafetyUser(User orignUser){
-        if(orignUser == null){
+    public User getSafetyUser(User orignUser) {
+        if (orignUser == null) {
             return null;
         }
         User safetyUser = new User();
