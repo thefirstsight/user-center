@@ -60,12 +60,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         String validPattern = "[`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？]";
         Matcher matcher = Pattern.compile(validPattern).matcher(userAccount);
         if (matcher.find()) {
-            return -1;
+            throw new BusinessException(ErrorCode.PARAM_ERROR, "包含特殊字符");
         }
 
         //密码和校验密码相同
         if (!userPassword.equals(checkPassword)) {
-            return -1;
+            throw new BusinessException(ErrorCode.PARAM_ERROR, "两次密码不一致");
         }
 
         //用户账户不能重复
@@ -96,7 +96,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         boolean saveResult = this.save(user);
 
         if (!saveResult) {
-            return -1;
+            throw new BusinessException(ErrorCode.PARAM_ERROR, "注册失败");
         }
         return user.getId();
     }
